@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tax-rules>
+    <tax-rule>
+        <countries>
+            <country>FRA</country>
+        </countries>
+        <taxes>
+            <tax type="percent">
+                <descriptives>
+                    <descriptive locale="fr_FR">
+                        <title>TVA 10% Tax</title>
+                    </descriptive>
+                    <descriptive locale="en_US">
+                        <title>French VAT 10% Tax</title>
+                    </descriptive>
+                </descriptives>
+
+                <requirement key="percent">10</requirement>
+            </tax>
+        </taxes>
+    </tax-rule>
+</tax-rules>

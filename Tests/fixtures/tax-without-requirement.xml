@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tax-rules>
+    <tax-rule>
+        <countries>
+            <country>FRA</country>
+        </countries>
+        <descriptives>
+            <descriptive locale="fr_FR">
+                <title>TVA 10%</title>
+            </descriptive>
+            <descriptive locale="en_US">
+                <title>French VAT 10%</title>
+            </descriptive>
+        </descriptives>
+        <taxes>
+            <tax type="foo">
+                <descriptives>
+                    <descriptive locale="fr_FR">
+                        <title>Foo</title>
+                    </descriptive>
+                    <descriptive locale="en_US">
+                        <title>Foo</title>
+                    </descriptive>
+                </descriptives>
+
+            </tax>
+            <tax type="bar">
+                <descriptives>
+                    <descriptive locale="fr_FR">
+                        <title>Bar</title>
+                    </descriptive>
+                    <descriptive locale="en_US">
+                        <title>Bar</title>
+                    </descriptive>
+                </descriptives>
+            </tax>
+            <tax type="baz">
+                <descriptives>
+                    <descriptive locale="fr_FR">
+                        <title>Baz</title>
+                    </descriptive>
+                    <descriptive locale="en_US">
+                        <title>Baz</title>
+                    </descriptive>
+                </descriptives>
+                <requirement key="foo">bar</requirement>
+            </tax>
+        </taxes>
+    </tax-rule>
+</tax-rules>

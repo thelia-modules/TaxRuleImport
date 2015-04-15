@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="tax-rules" type="tax-rulesType"/>
+  <xs:complexType name="descriptiveType">
+    <xs:all>
+      <xs:element name="title" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+    <xs:attribute type="xs:string" name="locale" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="tax-ruleType">
+    <xs:all>
+      <xs:element type="countriesType" name="countries" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="descriptivesType" name="descriptives" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="taxesType" name="taxes" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="taxesType">
+    <xs:sequence>
+      <xs:element type="taxType" name="tax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="descriptivesType">
+    <xs:sequence>
+      <xs:element type="descriptiveType" name="descriptive" maxOccurs="unbounded" minOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tax-rulesType">
+    <xs:sequence>
+      <xs:element type="tax-ruleType" name="tax-rule" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="countriesType">
+    <xs:sequence>
+      <xs:element name="country" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requirementType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="key" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="taxType">
+    <xs:sequence>
+        <xs:element type="descriptivesType" name="descriptives" maxOccurs="1" minOccurs="1"/>
+        <xs:element type="requirementType" name="requirement" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="type" use="required"/>
+  </xs:complexType>
+</xs:schema>
