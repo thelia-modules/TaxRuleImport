@@ -29,4 +29,9 @@ class TaxRuleImportManager implements TaxRuleImportManagerInterface
     {
         return realpath($this->getResourcesPath()."xsd".DS."taxrule.xsd");
     }
+
+    public function getXMLNamespace()
+    {
+        return "http://thelia.net/schema/dic/tax-rule";
+    }
 }

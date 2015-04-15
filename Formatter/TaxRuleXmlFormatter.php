@@ -12,6 +12,7 @@
 
 namespace TaxRuleImport\Formatter;
 
+use Symfony\Component\DependencyInjection\SimpleXMLElement;
 use TaxRuleImport\Manager\TaxRuleImportManagerInterface;
 use TaxRuleImport\Tax\KnownTypes;
 use Thelia\Core\FileFormat\Formatting\AbstractFormatter;
@@ -82,9 +83,9 @@ class TaxRuleXmlFormatter extends AbstractFormatter
      */
     public function encode(FormatterData $data)
     {
-        $xml = new \SimpleXMLElement("<tax-rules></tax-rules>");
+        $xml = new SimpleXMLElement("<tax-rules></tax-rules>");
 
-        foreach ($data as $row) {
+        foreach ($data->getDataReverseAliases() as $row) {
             $taxRule = $xml->addChild("tax-rule");
 
             $countries = $taxRule->addChild("countries");
@@ -102,22 +103,28 @@ class TaxRuleXmlFormatter extends AbstractFormatter
 
                 $this->extractDescriptive($rawTax["i18n"], $tax);
 
-                $requirements = json_decode($rawTax["requirements"]);
-                foreach ($requirements as $name => $requirementValue) {
+                foreach ($rawTax["requirements"] as $name => $requirementValue) {
                     $requirement = $tax->addChild("requirement", $requirementValue);
                     $requirement->addAttribute("key", $name);
                 }
             }
         }
+
+        $dom = new \DOMDocument("1.0", "utf-8");
+        $dom->loadXML($xml->saveXML());
+        $dom->formatOutput = true;
+        $dom->preserveWhiteSpace = true;
+
+        return $dom->C14N();
     }
 
     protected function extractDescriptive($row, \SimpleXMLElement $parent)
     {
         $descriptives = $parent->addChild("descriptives");
 
-        foreach ($row as $locale => $values) {
+        foreach ($row as $values) {
             $descriptive = $descriptives->addChild("descriptive");
-            $descriptive->addAttribute("locale", $locale);
+            $descriptive->addAttribute("locale", $values["locale"]);
 
             $descriptive->addChild("title", $values["title"]);
 
@@ -141,12 +148,56 @@ class TaxRuleXmlFormatter extends AbstractFormatter
 
         $dom->schemaValidate($this->manager->getSchemaValidatorFilePath());
 
-        $xml = new \SimpleXMLElement($rawData);
-        $xml->xpath("");
+        $xml = new SimpleXMLElement($rawData);
+        $xml->registerXPathNamespace("taxrule", $this->manager->getXMLNamespace());
 
         $data = array();
 
+        /** @var SimpleXMLElement $taxRule */
+        foreach ($xml->xpath(".//taxrule:tax-rules/taxrule:tax-rule") as $taxRule) {
+            $row = &$data[];
+
+            foreach ($taxRule->xpath(".//taxrule:countries/taxrule:country") as $country) {
+                $row["countries"][] = (string) $country;
+            }
+
+            $this->parseDescriptives($taxRule, $row);
+
+            /** @var SimpleXMLElement $tax */
+            foreach ($taxRule->xpath(".//taxrule:taxes/taxfule:tax") as $tax) {
+                $taxRow = &$row["taxes"][];
+                $taxType = $tax->getAttributeAsPhp("type");
+
+                $taxRow["type"] = $taxType;
+
+                $this->parseDescriptives($tax, $taxRow);
+
+                $taxRow["requirements"] = [];
+
+                /** @var SimpleXMLElement $requirement */
+                foreach ($tax->xpath(".//taxrule:requirement") as $requirement) {
+                    $key = $requirement->getAttributeAsPhp("key");
+                    $taxRow["requirements"][$key] = (string) $requirement;
+                }
+            }
+        }
+
         return (new FormatterData())->setData($data);
+    }
+
+    protected function parseDescriptives(SimpleXMLElement $xml, array &$row)
+    {
+        /** @var SimpleXMLElement $descriptive */
+        foreach ($xml->xpath(".//taxrule:descriptives/taxrule:descriptive") as $descriptive) {
+            $locale = $descriptive->getAttributeAsPhp("locale");
+            $title = (string) $descriptive->xpath(".//taxrule:title");
+            $description = (string) $descriptive->xpath(".//taxrule:description");
+
+            $row["i18n"][$locale] = [
+                "title" => $title,
+                "description" => $description,
+            ];
+        }
     }
 
     /**

@@ -22,4 +22,6 @@ interface TaxRuleImportManagerInterface
     public function getResourcesPath();
 
     public function getSchemaValidatorFilePath();
+
+    public function getXMLNamespace();
 }
