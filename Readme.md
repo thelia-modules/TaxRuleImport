@@ -2,6 +2,8 @@
 
 This module add import and export for tax rules
 
+/!\ Tax rule export filter will be available in Thelia 2.1.4 and 2.2.0-alpha2
+
 ## Installation
 
 ### Manually
