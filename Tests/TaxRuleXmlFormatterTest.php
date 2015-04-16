@@ -58,17 +58,59 @@ class TaxRuleXmlFormatterTest extends \PHPUnit_Framework_TestCase
                         "countries" => ["FRA", "USA"],
                         "i18n" => [
                             ["locale" => "fr_FR", "title" => "TVA 10%", "description" => "J'aime les taxes"],
-                            ["locale" => "en_US", "title" => "French VAT 10%"],
+                            ["locale" => "en_US", "title" => "French VAT 10%", "description" => ''],
                         ],
                         "taxes" => [
                             [
                                 "type" => 'foo',
                                 "i18n" => [
                                     ["locale" => "fr_FR", "title" => "10% en plus", "description" => "Cadeau"],
-                                    ["locale" => "en_US", "title" => "+ 10%"],
+                                    ["locale" => "en_US", "title" => "+ 10%", "description" => ''],
                                 ],
                                 "requirements" => [
                                     "percent" => 10
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                [
+                    [
+                        "countries" => ["FRA"],
+                        "i18n" => [
+                            ["locale" => "fr_FR", "title" => "TVA 10%", "description" => "J'aime les taxes"],
+                            ["locale" => "en_US", "title" => "French VAT 10%", "description" => ''],
+                        ],
+                        "taxes" => [
+                            [
+                                "type" => 'foo',
+                                "i18n" => [
+                                    ["locale" => "fr_FR", "title" => "10% en plus", "description" => "Cadeau"],
+                                    ["locale" => "en_US", "title" => "+ 10%", "description" => ''],
+                                ],
+                                "requirements" => [
+                                    "percent" => 10
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "countries" => ["FRA"],
+                        "i18n" => [
+                            ["locale" => "fr_FR", "title" => "TVA 20%", "description" => "J'aime vraiment les taxes"],
+                            ["locale" => "en_US", "title" => "French VAT 20%", "description" => ''],
+                        ],
+                        "taxes" => [
+                            [
+                                "type" => 'foo',
+                                "i18n" => [
+                                    ["locale" => "fr_FR", "title" => "20% en plus", "description" => "Cadeau"],
+                                    ["locale" => "en_US", "title" => "+ 20%", "description" => ''],
+                                ],
+                                "requirements" => [
+                                    "percent" => 20
                                 ]
                             ]
                         ]

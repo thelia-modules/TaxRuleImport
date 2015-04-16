@@ -25,7 +25,7 @@ use Thelia\Core\FileFormat\Formatting\FormatterData;
  */
 class TaxRuleXmlFormatter extends AbstractFormatter
 {
-    const TYPE = "taxrule-xml";
+    const TYPE = "tax-rules-xml";
 
     protected $manager;
 
@@ -149,22 +149,22 @@ class TaxRuleXmlFormatter extends AbstractFormatter
         $dom->schemaValidate($this->manager->getSchemaValidatorFilePath());
 
         $xml = new SimpleXMLElement($rawData);
-        $xml->registerXPathNamespace("taxrule", $this->manager->getXMLNamespace());
+        $xml->registerXPathNamespace("tax-rules", $this->manager->getXMLNamespace());
 
         $data = array();
 
         /** @var SimpleXMLElement $taxRule */
-        foreach ($xml->xpath(".//taxrule:tax-rules/taxrule:tax-rule") as $taxRule) {
+        foreach ($xml->xpath("//tax-rule") as $taxRule) {
             $row = &$data[];
 
-            foreach ($taxRule->xpath(".//taxrule:countries/taxrule:country") as $country) {
+            foreach ($taxRule->xpath("./countries/country") as $country) {
                 $row["countries"][] = (string) $country;
             }
 
             $this->parseDescriptives($taxRule, $row);
 
             /** @var SimpleXMLElement $tax */
-            foreach ($taxRule->xpath(".//taxrule:taxes/taxfule:tax") as $tax) {
+            foreach ($taxRule->xpath("./taxes/tax") as $tax) {
                 $taxRow = &$row["taxes"][];
                 $taxType = $tax->getAttributeAsPhp("type");
 
@@ -175,7 +175,7 @@ class TaxRuleXmlFormatter extends AbstractFormatter
                 $taxRow["requirements"] = [];
 
                 /** @var SimpleXMLElement $requirement */
-                foreach ($tax->xpath(".//taxrule:requirement") as $requirement) {
+                foreach ($tax->xpath("./requirement") as $requirement) {
                     $key = $requirement->getAttributeAsPhp("key");
                     $taxRow["requirements"][$key] = (string) $requirement;
                 }
@@ -188,12 +188,13 @@ class TaxRuleXmlFormatter extends AbstractFormatter
     protected function parseDescriptives(SimpleXMLElement $xml, array &$row)
     {
         /** @var SimpleXMLElement $descriptive */
-        foreach ($xml->xpath(".//taxrule:descriptives/taxrule:descriptive") as $descriptive) {
+        foreach ($xml->xpath("./descriptives/descriptive") as $descriptive) {
             $locale = $descriptive->getAttributeAsPhp("locale");
-            $title = (string) $descriptive->xpath(".//taxrule:title");
-            $description = (string) $descriptive->xpath(".//taxrule:description");
+            $title = (string) $descriptive->title;
+            $description = (string) $descriptive->description;
 
-            $row["i18n"][$locale] = [
+            $row["i18n"][] = [
+                "locale" => $locale,
                 "title" => $title,
                 "description" => $description,
             ];
