@@ -21,12 +21,10 @@ use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\FileFormat\FormatType;
 use TaxRuleImport\Formatter\TaxRuleXmlFormatter;
 use Thelia\Model\Map\CountryTableMap;
-use Thelia\Model\Map\TaxRuleI18nTableMap;
 use Thelia\Model\TaxI18nQuery;
 use Thelia\Model\TaxQuery;
 use Thelia\Model\TaxRuleI18nQuery;
 use Thelia\Model\TaxRuleQuery;
-
 
 /**
  * Class TaxRuleExport
@@ -53,13 +51,12 @@ class TaxRuleExport extends ExportHandler
     public function getHandledTypes()
     {
         return array(
-            FormatType::UNBOUNDED,
             TaxRuleXmlFormatter::TYPE,
         );
     }
 
     /**
-     * @param  Lang $lang
+     * @param  Lang                         $lang
      * @return ModelCriteria|array|BaseLoop
      *
      * Can be optimized
@@ -88,7 +85,6 @@ class TaxRuleExport extends ExportHandler
 
             $row["i18n"] = $this->formatI18n(TaxRuleI18nQuery::create()->filterByTaxRule($taxRule));
 
-
             $taxes = TaxQuery::create()
                 ->useTaxRuleCountryQuery()
                     ->filterByTaxRule($taxRule)
@@ -105,7 +101,6 @@ class TaxRuleExport extends ExportHandler
                 $taxRow["type"] = KnownTypes::reverseResolve($tax->getType());
                 $taxRow["requirements"] = $tax->getRequirements();
             }
-
         }
 
         return $data;

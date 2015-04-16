@@ -18,6 +18,7 @@ class TaxRuleImport extends BaseModule
 {
     /** @var string */
     const DOMAIN_NAME = 'taxruleimport';
+    const EXPORT_REF  = 'taxrule.export';
 
     /*
      * You may now override BaseModuleInterface methods, such as:

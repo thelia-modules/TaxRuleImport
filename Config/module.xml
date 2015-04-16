@@ -4,10 +4,10 @@
         xsi:schemaLocation="http://thelia.net/schema/dic/module http://thelia.net/schema/dic/module/module-2_1.xsd">
     <fullnamespace>TaxRuleImport\TaxRuleImport</fullnamespace>
     <descriptive locale="en_US">
-        <title>Tax rule import</title>
+        <title>Tax rule import and export</title>
     </descriptive>
     <descriptive locale="fr_FR">
-        <title>Import de règle de taxe</title>
+        <title>Import et export des règles de taxe</title>
     </descriptive>
     <languages>
         <language>en_US</language>
@@ -20,5 +20,5 @@
     </author>
     <type>classic</type>
     <thelia>2.1.0</thelia>
-    <stability>other</stability>
+    <stability>prod</stability>
 </module>

@@ -13,8 +13,8 @@
 namespace TaxRuleImport\Import;
 
 use Propel\Runtime\Propel;
+use TaxRuleImport\Formatter\TaxRuleXmlFormatter;
 use TaxRuleImport\Tax\KnownTypes;
-use Thelia\Core\FileFormat\FormatType;
 use Thelia\ImportExport\Import\ImportHandler;
 use Thelia\Core\FileFormat\Formatting\FormatterData;
 use Thelia\Model\CountryQuery;
@@ -50,7 +50,7 @@ class TaxRuleImport extends ImportHandler
     public function getHandledTypes()
     {
         return array(
-            FormatType::UNBOUNDED,
+            TaxRuleXmlFormatter::TYPE,
         );
     }
 
@@ -73,13 +73,15 @@ class TaxRuleImport extends ImportHandler
         $con = Propel::getConnection();
         $con->beginTransaction();
 
+        $rawData = $data->getData();
+
         try {
-            foreach ($data->getData() as $row) {
+            foreach ($rawData as $row) {
                 $taxRule = new TaxRule();
                 $this->hydrateI18n($taxRule, $row);
 
                 $taxRule->save($con);
-                $countries = $this->getCountries($row["country"]);
+                $countries = $this->getCountries($row["countries"]);
 
                 foreach ($row["taxes"] as $rawTax) {
                     $tax = new Tax();
@@ -97,10 +99,9 @@ class TaxRuleImport extends ImportHandler
                             ->setTaxRule($taxRule)
                             ->setTax($tax)
                             ->setCountry($country)
-                            ->save($country)
+                            ->save($con)
                         ;
                     }
-
                 }
             }
 
@@ -110,6 +111,8 @@ class TaxRuleImport extends ImportHandler
 
             throw $e;
         }
+
+        return count($rawData);
     }
 
     protected function hydrateI18n($obj, array $row)

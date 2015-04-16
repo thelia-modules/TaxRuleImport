@@ -12,7 +12,6 @@
 
 namespace TaxRuleImport\Tax;
 
-
 /**
  * Class KnownTypes
  * @package TaxRuleImport\Tax
@@ -28,7 +27,7 @@ class KnownTypes
 
     public static function resolve($type, $default = null)
     {
-        if(static::has($type)) {
+        if (static::has($type)) {
             return static::$knownTaxTypes[$type];
         }
 

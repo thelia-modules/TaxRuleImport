@@ -10,15 +10,33 @@
 /* file that was distributed with this source code.                                  */
 /*************************************************************************************/
 
-namespace TaxRuleImport\Tests;
+namespace TaxRuleImport\Hook;
 
+use TaxRuleImport\TaxRuleImport;
+use Thelia\Core\Event\Hook\HookRenderEvent;
+use Thelia\Core\Hook\BaseHook;
+use Thelia\Model\ExportQuery;
+use Thelia\Model\Map\ExportTableMap;
 
 /**
- * Class TaxRuleImportTest
- * @package TaxRuleImport\Tests
+ * Class ExportFilterHook
+ * @package TaxRuleImport\Hook
  * @author Benjamin Perche <benjamin@thelia.net>
  */
-class TaxRuleImportTest extends \PHPUnit_Framework_TestCase
+class ExportFilterHook extends BaseHook
 {
+    public function onExportBottom(HookRenderEvent $event)
+    {
+        $export = ExportQuery::create()
+            ->filterByRef(TaxRuleImport::EXPORT_REF)
+            ->select([ExportTableMap::ID])
+            ->limit(1)
+            ->find()
+            ->toArray()
+        ;
 
+        if (count($export) && $export[0] == $event->getArgument("id")) {
+            $event->add($this->render("tax-rule-import/filters.html"));
+        }
+    }
 }

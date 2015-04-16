@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-md-6">
+        <label for="tax_rule_id_export_select">
+            {intl l="Choose the tax rules to export" d="taxruleimport.bo.default"}
+        </label>
+        <select name="tax_rule_id" id="tax_rule_id_export_select">
+            <option value="">{intl l="All the tax rules" d="taxruleimport.bo.default"}</option>
+            {loop type="tax-rule" name="tax-rule-list"}
+            <option value="{$ID}">{$TITLE}</option>
+            {/loop}
+        </select>
+    </div>
+</div>

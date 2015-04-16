@@ -20,7 +20,6 @@ use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Translation\Translator;
 use Thelia\Model\LangQuery;
 
-
 /**
  * Class TaxRuleExportTest
  * @package TaxRuleImport\Tests

@@ -11,12 +11,12 @@
 /*************************************************************************************/
 
 namespace TaxRuleImport\Tests;
+
 use TaxRuleImport\Formatter\TaxRuleXmlFormatter;
 use TaxRuleImport\Manager\TaxRuleImportManager;
 use Thelia\Core\FileFormat\Formatting\FormatterData;
 use Thelia\Core\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
-
 
 /**
  * Class TaxRuleXmlFormatterTest
@@ -68,12 +68,12 @@ class TaxRuleXmlFormatterTest extends \PHPUnit_Framework_TestCase
                                     ["locale" => "en_US", "title" => "+ 10%", "description" => ''],
                                 ],
                                 "requirements" => [
-                                    "percent" => 10
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                    "percent" => 10,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             [
                 [
@@ -91,10 +91,10 @@ class TaxRuleXmlFormatterTest extends \PHPUnit_Framework_TestCase
                                     ["locale" => "en_US", "title" => "+ 10%", "description" => ''],
                                 ],
                                 "requirements" => [
-                                    "percent" => 10
-                                ]
-                            ]
-                        ]
+                                    "percent" => 10,
+                                ],
+                            ],
+                        ],
                     ],
                     [
                         "countries" => ["FRA"],
@@ -110,11 +110,11 @@ class TaxRuleXmlFormatterTest extends \PHPUnit_Framework_TestCase
                                     ["locale" => "en_US", "title" => "+ 20%", "description" => ''],
                                 ],
                                 "requirements" => [
-                                    "percent" => 20
-                                ]
-                            ]
+                                    "percent" => 20,
+                                ],
+                            ],
                         ]
-                    ]
+                    ],
                 ]
             ]
         ];

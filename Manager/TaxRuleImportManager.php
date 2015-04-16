@@ -12,7 +12,6 @@
 
 namespace TaxRuleImport\Manager;
 
-
 /**
  * Class TaxRuleImportManager
  * @package TaxRuleImport\Manager

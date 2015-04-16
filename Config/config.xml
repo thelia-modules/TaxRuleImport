@@ -11,6 +11,11 @@
             <tag name="thelia.formatter" />
         </service>
     </services>
+    <hooks>
+        <hook id="taxruleimport.export.filters.hook" class="TaxRuleImport\Hook\ExportFilterHook" scope="request">
+            <tag name="hook.event_listener" event="export.bottom" type="back" active="1" />
+        </hook>
+    </hooks>
     <export_categories>
         <export_category id="export.tax">
             <title locale="en_US">Taxes</title>
@@ -27,4 +32,20 @@
             </export_descriptive>
         </export>
     </exports>
+    <import_categories>
+        <import_category id="import.tax">
+            <title locale="en_US">Taxes</title>
+            <title locale="fr_FR">Taxes</title>
+        </import_category>
+    </import_categories>
+    <imports>
+        <import id="taxrule.import" class="TaxRuleImport\Import\TaxRuleImport" category_id="import.tax">
+            <import_descriptive locale="en_US">
+                <title>Tax rules</title>
+            </import_descriptive>
+            <import_descriptive locale="fr_FR">
+                <title>Règles de taxe</title>
+            </import_descriptive>
+        </import>
+    </imports>
 </config>
