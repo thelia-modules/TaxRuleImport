@@ -11,4 +11,20 @@
             <tag name="thelia.formatter" />
         </service>
     </services>
+    <export_categories>
+        <export_category id="export.tax">
+            <title locale="en_US">Taxes</title>
+            <title locale="fr_FR">Taxes</title>
+        </export_category>
+    </export_categories>
+    <exports>
+        <export id="taxrule.export" class="TaxRuleImport\Export\TaxRuleExport" category_id="export.tax">
+            <export_descriptive locale="en_US">
+                <title>Tax rules</title>
+            </export_descriptive>
+            <export_descriptive locale="fr_FR">
+                <title>Règles de taxe</title>
+            </export_descriptive>
+        </export>
+    </exports>
 </config>

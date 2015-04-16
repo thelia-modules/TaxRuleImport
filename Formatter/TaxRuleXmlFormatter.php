@@ -83,7 +83,10 @@ class TaxRuleXmlFormatter extends AbstractFormatter
      */
     public function encode(FormatterData $data)
     {
-        $xml = new SimpleXMLElement("<tax-rules></tax-rules>");
+        $xml = new SimpleXMLElement(sprintf(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><tax-rules xmlns=\"%s\"></tax-rules>",
+            $this->manager->getXMLNamespace()
+        ));
 
         foreach ($data->getDataReverseAliases() as $row) {
             $taxRule = $xml->addChild("tax-rule");
@@ -111,11 +114,11 @@ class TaxRuleXmlFormatter extends AbstractFormatter
         }
 
         $dom = new \DOMDocument("1.0", "utf-8");
-        $dom->loadXML($xml->saveXML());
         $dom->formatOutput = true;
-        $dom->preserveWhiteSpace = true;
+        $dom->preserveWhiteSpace = false;
+        $dom->loadXML($xml->saveXML());
 
-        return $dom->C14N();
+        return $dom->saveXML();
     }
 
     protected function extractDescriptive($row, \SimpleXMLElement $parent)

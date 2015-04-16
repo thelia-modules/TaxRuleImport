@@ -12,11 +12,15 @@
 
 namespace TaxRuleImport\Import;
 
-use Thelia\Core\FileFormat\Formatting\Exception\BadFormattedStringException;
+use Propel\Runtime\Propel;
+use TaxRuleImport\Tax\KnownTypes;
 use Thelia\Core\FileFormat\FormatType;
 use Thelia\ImportExport\Import\ImportHandler;
 use Thelia\Core\FileFormat\Formatting\FormatterData;
 use Thelia\Model\CountryQuery;
+use Thelia\Model\Tax;
+use Thelia\Model\TaxRule;
+use Thelia\Model\TaxRuleCountry;
 
 /**
  * Class TaxRuleImport
@@ -55,7 +59,7 @@ class TaxRuleImport extends ImportHandler
      */
     protected function getMandatoryColumns()
     {
-        return ["country", "tax"];
+        return [];
     }
 
     /**
@@ -66,48 +70,81 @@ class TaxRuleImport extends ImportHandler
      */
     public function retrieveFromFormatterData(FormatterData $data)
     {
-        foreach ($data->getData() as $row) {
-            $country = $this->getCountry($row["country"]);
-            $taxes = [$this->getTax($row["tax"])];
+        $con = Propel::getConnection();
+        $con->beginTransaction();
 
-            for ($i = 1; isset($row["tax".$i]); ++$i) {
-                if (!empty($row["tax".$i])) {
-                    $taxes[] = $this->getTax($row["tax" . $i]);
+        try {
+            foreach ($data->getData() as $row) {
+                $taxRule = new TaxRule();
+                $this->hydrateI18n($taxRule, $row);
+
+                $taxRule->save($con);
+                $countries = $this->getCountries($row["country"]);
+
+                foreach ($row["taxes"] as $rawTax) {
+                    $tax = new Tax();
+                    $this->hydrateI18n($tax, $rawTax);
+
+                    $tax
+                        ->setType(KnownTypes::resolve($rawTax["type"]))
+                        ->setRequirements($rawTax["requirements"])
+                        ->save($con)
+                    ;
+
+                    foreach ($countries as $country) {
+                        $taxRuleCountry = new TaxRuleCountry();
+                        $taxRuleCountry
+                            ->setTaxRule($taxRule)
+                            ->setTax($tax)
+                            ->setCountry($country)
+                            ->save($country)
+                        ;
+                    }
+
                 }
             }
+
+            $con->commit();
+        } catch (\Exception $e) {
+            $con->rollBack();
+
+            throw $e;
         }
     }
 
-    protected function getCountry($country)
+    protected function hydrateI18n($obj, array $row)
     {
-        if (! isset(static::$countryCache[$country])) {
-            $countryObject = CountryQuery::create()
-                ->filterByIsoalpha2($country)
-                    ->_or()
-                ->filterByIsoalpha3($country)
-                    ->_or()
-                ->filterByIsocode($country)
-                ->findOne()
-            ;
+        foreach ($row["i18n"] as $translation) {
+            $obj->getTranslation($translation["locale"])
+                ->setTitle($translation["title"])
+                ->setDescription(isset($translation["description"]) ? $translation["description"] : null);
+        }
+    }
 
-            if (null === $countryObject) {
-                throw new \InvalidArgumentException(
-                    sprintf("The country code '%s' doesn't belong to any known country isoalpha2, isoalpha3 or isocode", $country)
-                );
+    protected function getCountries($countries)
+    {
+        $countriesObject = [];
+
+        foreach ($countries as $country) {
+            if (!isset(static::$countryCache[$country])) {
+                $countryObject = CountryQuery::create()
+                    ->filterByIsoalpha2($country)
+                    ->_or()
+                    ->filterByIsoalpha3($country)
+                    ->_or()
+                    ->filterByIsocode($country)
+                    ->findOne();
+
+                if (null === $countryObject) {
+                    throw new \InvalidArgumentException(
+                        sprintf("The country code '%s' doesn't belong to any known country isoalpha2, isoalpha3 or isocode", $country)
+                    );
+                }
+
+                $countriesObject[] = static::$countryCache[$country] = $countryObject;
             }
-
-            static::$countryCache[$country] = $countryObject;
         }
 
-        return static::$countryCache[$country];
-    }
-
-    protected function getTax($rawTax)
-    {
-        if (! isset(static::$taxCache[$rawTax])) {
-
-        }
-
-        return static::$taxCache[$rawTax];
+        return $countriesObject;
     }
 }
