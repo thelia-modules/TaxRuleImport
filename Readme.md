@@ -54,7 +54,7 @@ Then, each tax rule must have two tags:
 
 It can have a ```taxes``` tag too.
 
-#### The ```<countries>`````` tag
+#### The ```<countries>``` tag
 
 This tag must contain at least one ```country``` tag. This is the countries where the tax rules has to be applied.
 
