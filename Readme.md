@@ -54,7 +54,7 @@ Then, each tax rule must have two tags:
 
 It can have a ```taxes``` tag too.
 
-#### The <countries> tag
+#### The ```<countries>`````` tag
 
 This tag must contain at least one ```country``` tag. This is the countries where the tax rules has to be applied.
 
@@ -71,12 +71,12 @@ Example:
 ...
 ```
 
-#### The <descriptives> tag
+#### The ```<descriptives>``` tag
 
 This tag must contain at least one ```descriptive``` tag, that has a mandatory attribute ```locale```.
 Then, the ```descriptive``` tag can have two children:
-- <title> The tax rule title
-- <description> The tax rule description
+- ```<title>``` The tax rule title
+- ```<description>``` The tax rule description
  
 Example:
 ```xml
@@ -90,7 +90,7 @@ Example:
 </descriptives>
 ```
 
-#### The <taxes> tag
+#### The ```<taxes>``` tag
 
 This tag contains at least one ```tax``` tag, that has a mandatory attribute ```type```.
 
@@ -101,8 +101,8 @@ The type attribute can be:
 - Your own tax class
 
 The ```tax``` tag can have two children:
-- <descriptives> This tag works exactly like ```tax-rule```'s one
-- <requirement> This tag has a mandatory attribute ```key``` that is the class's requirement name, and the value is the requirement's. You may add as many requirement tag as you want.
+- ```<descriptives>``` This tag works exactly like ```tax-rule```'s one
+- ```<requirement>``` This tag has a mandatory attribute ```key``` that is the class's requirement name, and the value is the requirement's. You may add as many requirement tag as you want.
 
 ### Example
 
