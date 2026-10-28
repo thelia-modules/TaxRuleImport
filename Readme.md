@@ -1,5 +1,8 @@
 # Tax Rule Import
 
+> This module is no longer maintained and will not be ported to Thelia 3. Its 2.x versions remain available on Packagist.
+> There is no replacement module.
+
 This module add import and export for tax rules
 
 /!\ Tax rule export filter will be available in Thelia 2.1.4 and 2.2.0-alpha2
